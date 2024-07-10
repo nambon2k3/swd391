@@ -4,9 +4,7 @@
  */
 package controller;
 
-import coordinator.NurseCoordinator;
 import java.io.IOException;
-import java.io.PrintWriter;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
@@ -14,8 +12,10 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.logging.Level;
-import java.util.logging.Logger;
+import service.Impl.MedicineService;
+import service.Impl.TreatmentSheetService;
+import service.IMedicineService;
+import service.ITreatmentSheetService;
 
 /**
  *
@@ -23,6 +23,18 @@ import java.util.logging.Logger;
  */
 @WebServlet(name = "AssignMedicineServlet", urlPatterns = {"/assign-medicine"})
 public class AssignMedicineServlet extends HttpServlet {
+
+    private IMedicineService medicineService;
+    private ITreatmentSheetService treatmentSheetService;
+    
+    
+    @Override
+    public void init() throws ServletException {
+        medicineService = new MedicineService();
+        treatmentSheetService = new TreatmentSheetService();
+    }
+    
+    
 
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
@@ -34,17 +46,15 @@ public class AssignMedicineServlet extends HttpServlet {
         String observationDetail = request.getParameter("observationDetail");
         String startDate = request.getParameter("startDate");
 
-        NurseCoordinator nurseCoordinator = new NurseCoordinator();
-
         String ergMsg = null;
 
-        boolean isValid = nurseCoordinator.getMedicineService().validate(medicineId, quantity);
+        boolean isValid = medicineService.validate(medicineId, quantity);
         if (!isValid) {
             ergMsg = "Not enough quantity";
             response.sendRedirect("view-treatment-sheet?errMsg=" + ergMsg+ "&treatmentSheetId=" + treatmentsheetId);
             return;
         }
-        boolean isUpdatedQuantity = nurseCoordinator.getMedicineService().updateQuantity(medicineId, quantity);
+        boolean isUpdatedQuantity = medicineService.updateQuantity(medicineId, quantity);
         if (!isUpdatedQuantity) {
             ergMsg = "Update quantity failed!";
             response.sendRedirect("view-treatment-sheet?errMsg=" + ergMsg+ "&treatmentSheetId=" + treatmentsheetId);
@@ -52,7 +62,7 @@ public class AssignMedicineServlet extends HttpServlet {
         }
         SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
         try {
-            boolean isUpdatedTreatmentSheet = nurseCoordinator.getTreatmentSheetService().updateTreatmentSheet(medicineId, treatmentsheetId, observationDetail, frequency, format.parse(startDate), quantity);
+            boolean isUpdatedTreatmentSheet = treatmentSheetService.updateTreatmentSheet(medicineId, treatmentsheetId, observationDetail, frequency, format.parse(startDate), quantity);
             if (!isUpdatedTreatmentSheet) {
                 ergMsg = "Update treatment sheet failed!";
                 response.sendRedirect("view-treatment-sheet?errMsg=" + ergMsg + "&treatmentSheetId=" + treatmentsheetId);

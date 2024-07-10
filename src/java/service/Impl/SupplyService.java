@@ -7,23 +7,23 @@ package service.Impl;
 import dal.DBContext;
 import java.util.List;
 import model.Supply;
-import service.SupplyService;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import model.SupplyAssignDetail;
+import service.ISupplyService;
 
 /**
  *
  * @author Legion
  */
-public class SupplyServiceImpl extends DBContext implements SupplyService {
+public class SupplyService extends DBContext implements ISupplyService {
 
     Connection connection;
 
-    public SupplyServiceImpl() {
+    public SupplyService() {
         try {
             connection = getConnection();
         } catch (Exception e) {

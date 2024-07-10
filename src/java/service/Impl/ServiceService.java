@@ -7,22 +7,22 @@ package service.Impl;
 import dal.DBContext;
 import java.util.List;
 import model.Service;
-import service.ServiceService;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import model.ServiceAssignDetail;
+import service.IServiceService;
 /**
  *
  * @author Legion
  */
-public class ServiceServiceImpl extends DBContext implements ServiceService {
+public class ServiceService extends DBContext implements IServiceService {
 
     Connection connection;
 
-    public ServiceServiceImpl() {
+    public ServiceService() {
         try {
             connection = getConnection();
         } catch (Exception e) {

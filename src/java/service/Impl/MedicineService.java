@@ -7,23 +7,23 @@ package service.Impl;
 import dal.DBContext;
 import java.util.List;
 import model.Medicine;
-import service.MedicineService;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import model.MedicineAssignDetail;
+import service.IMedicineService;
 
 /**
  *
  * @author Legion
  */
-public class MedicineServiceImpl extends DBContext implements MedicineService {
+public class MedicineService extends DBContext implements IMedicineService {
 
     Connection connection;
 
-    public MedicineServiceImpl() {
+    public MedicineService() {
         try {
             connection = getConnection();
         } catch (Exception e) {

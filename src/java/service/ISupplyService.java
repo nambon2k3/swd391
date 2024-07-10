@@ -5,15 +5,14 @@
 package service;
 
 import java.util.List;
-import model.Service;
-import model.ServiceAssignDetail;
+import model.Supply;
+import model.SupplyAssignDetail;
 
 /**
  *
  * @author Legion
  */
-public interface ServiceService {
-    public List<ServiceAssignDetail> getAssignedServices(int treatementSheetId);
-    public Service getServiceById(int serviceId);
-    
+public interface ISupplyService {
+    public List<SupplyAssignDetail> getAssignedSupplies(int treatementSheetId);
+    public Supply getSupplyById(int supplyId);
 }

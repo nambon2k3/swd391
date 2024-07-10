@@ -4,7 +4,6 @@
  */
 package controller;
 
-import coordinator.NurseCoordinator;
 import java.io.IOException;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
@@ -17,6 +16,14 @@ import model.MedicineAssignDetail;
 import model.ServiceAssignDetail;
 import model.SupplyAssignDetail;
 import model.TreatmentSheet;
+import service.Impl.MedicineService;
+import service.Impl.ServiceService;
+import service.Impl.SupplyService;
+import service.Impl.TreatmentSheetService;
+import service.IMedicineService;
+import service.IServiceService;
+import service.ISupplyService;
+import service.ITreatmentSheetService;
 
 /**
  *
@@ -25,21 +32,33 @@ import model.TreatmentSheet;
 @WebServlet(name = "ViewTreatmentSheetServlet", urlPatterns = {"/view-treatment-sheet"})
 public class ViewTreatmentSheetServlet extends HttpServlet {
     
+    private IMedicineService medicineService;
+    private ISupplyService supplyService;
+    private IServiceService serviceService;
+    private ITreatmentSheetService treatmentSheetService;
+    
+    
+    @Override
+    public void init() throws ServletException {
+        medicineService = new MedicineService();
+        supplyService = new SupplyService();
+        serviceService = new ServiceService();
+        treatmentSheetService = new TreatmentSheetService();
+    }
+    
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         
         // Request data
         int treatmentSheetId = Integer.parseInt(request.getParameter("treatmentSheetId"));
-        
-        NurseCoordinator nurseCoordinator = new NurseCoordinator();
-        
+
         // Request assigned data
-        List<MedicineAssignDetail> assignedMedicines = nurseCoordinator.getMedicineService().getAssignedMedicines(treatmentSheetId);
-        List<SupplyAssignDetail> assignedSupplies = nurseCoordinator.getSupplyService().getAssignedSupplies(treatmentSheetId);
-        List<ServiceAssignDetail> assignedServices = nurseCoordinator.getServiceService().getAssignedServices(treatmentSheetId);
-        List<Medicine> listMedicines = nurseCoordinator.getMedicineService().getMedicines();
-        TreatmentSheet treatmentSheet = nurseCoordinator.getTreatmentSheetService().getTreatmentSheet(treatmentSheetId);
+        List<MedicineAssignDetail> assignedMedicines = medicineService.getAssignedMedicines(treatmentSheetId);
+        List<SupplyAssignDetail> assignedSupplies = supplyService.getAssignedSupplies(treatmentSheetId);
+        List<ServiceAssignDetail> assignedServices = serviceService.getAssignedServices(treatmentSheetId);
+        List<Medicine> listMedicines = medicineService.getMedicines();
+        TreatmentSheet treatmentSheet = treatmentSheetService.getTreatmentSheet(treatmentSheetId);
         
         // Setting attributes to request scope
         request.setAttribute("assignedMedicines", assignedMedicines);

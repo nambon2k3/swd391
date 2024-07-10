@@ -12,7 +12,7 @@ import model.MedicineAssignDetail;
  *
  * @author Legion
  */
-public interface MedicineService {
+public interface IMedicineService {
     public List<MedicineAssignDetail> getAssignedMedicines(int treatementSheetId);
     public Medicine getMedicineById(int medicineId);
     public boolean validate(int medicineId, int quantity);

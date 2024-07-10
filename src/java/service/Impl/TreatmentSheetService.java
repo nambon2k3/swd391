@@ -6,22 +6,22 @@ package service.Impl;
 
 import dal.DBContext;
 import model.TreatmentSheet;
-import service.TreatmentSheetService;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.Date;
+import service.ITreatmentSheetService;
 
 /**
  *
  * @author Legion
  */
-public class TreatmentSheetServiceImpl extends DBContext implements TreatmentSheetService {
+public class TreatmentSheetService extends DBContext implements ITreatmentSheetService {
 
     Connection connection;
 
-    public TreatmentSheetServiceImpl() {
+    public TreatmentSheetService() {
         try {
             connection = getConnection();
         } catch (Exception e) {
