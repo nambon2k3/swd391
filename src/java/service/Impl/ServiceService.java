@@ -5,6 +5,7 @@
 package service.Impl;
 
 import dal.DBContext;
+import dal.ServiceDAO;
 import java.util.List;
 import model.Service;
 import java.sql.Connection;
@@ -18,67 +19,22 @@ import service.IServiceService;
  *
  * @author Legion
  */
-public class ServiceService extends DBContext implements IServiceService {
+public class ServiceService implements IServiceService {
 
-    Connection connection;
+    ServiceDAO serviceDAO;
 
     public ServiceService() {
-        try {
-            connection = getConnection();
-        } catch (Exception e) {
-            System.out.println("Connect failed");
-        }
+        serviceDAO = new ServiceDAO();
     }
 
     @Override
     public List<ServiceAssignDetail> getAssignedServices(int treatmentSheetId) {
-        List<ServiceAssignDetail> serviceAssignDetails = new ArrayList<>();
-        String sql = "SELECT * FROM ServiceAssignDetail WHERE treatmentSheetId = ? AND isDeleted = 0";
-
-        try (PreparedStatement ps = connection.prepareStatement(sql)) {
-            ps.setInt(1, treatmentSheetId);
-            try (ResultSet rs = ps.executeQuery()) {
-                while (rs.next()) {
-                    ServiceAssignDetail detail = new ServiceAssignDetail();
-                    detail.setId(rs.getInt("id"));
-                    detail.setTreatmentsheetId(rs.getInt("treatmentSheetId"));
-                    detail.setServiceId(rs.getInt("serviceId"));
-                    detail.setNote(rs.getString("note"));
-                    detail.setDiagnostic(rs.getString("diagnostic"));
-                    detail.setStartDate(rs.getDate("startDate"));
-                    detail.setObservationDetail(rs.getString("observationDetail"));
-                    detail.setStatus(rs.getString("status"));
-                    detail.setIsDeleted(rs.getBoolean("isDeleted"));
-                    serviceAssignDetails.add(detail);
-                }
-            }
-        } catch (SQLException e) {
-            System.out.println("getAssignedServices: " + e.getMessage());
-        }
-        return serviceAssignDetails;
+        return serviceDAO.getAssignedServices(treatmentSheetId);
     }
 
     @Override
     public Service getServiceById(int serviceId) {
-        Service service = null;
-        String sql = "SELECT * FROM [Service] WHERE id = ? AND isDeleted = 0";
-
-        try (PreparedStatement ps = connection.prepareStatement(sql)) {
-            ps.setInt(1, serviceId);
-            try (ResultSet rs = ps.executeQuery()) {
-                if (rs.next()) {
-                    service = new Service();
-                    service.setId(rs.getInt("id"));
-                    service.setMaterialName(rs.getString("materialName"));
-                    service.setPrice(rs.getFloat("price"));
-                    service.setCreatedAt(rs.getDate("createdAt"));
-                    service.setIsDeleted(rs.getBoolean("isDeleted"));
-                }
-            }
-        } catch (SQLException e) {
-            System.out.println("getServiceById: " + e.getMessage());
-        }
-        return service;
+        return serviceDAO.getServiceById(serviceId);
     }
 
     
